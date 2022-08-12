@@ -15,6 +15,7 @@ export class RolesController {
 
   @Get('/:title')
   async getByTitle(@Param('title') title: string): Promise<RolesEntity> {
+    title = title.toUpperCase();
     return await this.roleService.getByTitle(title);
   }
 
