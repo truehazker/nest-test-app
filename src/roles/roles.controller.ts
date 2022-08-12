@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RolesEntity } from './roles.entity';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,7 +14,7 @@ export class RolesController {
   }
 
   @Get('/:title')
-  async getByTitle(title: string): Promise<RolesEntity> {
+  async getByTitle(@Param('title') title: string): Promise<RolesEntity> {
     return await this.roleService.getByTitle(title);
   }
 
