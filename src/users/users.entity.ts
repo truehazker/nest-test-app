@@ -1,18 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { RolesEntity } from '../roles/roles.entity';
 
 @Entity('users')
 export class UsersEntity {
   @ApiProperty({ example: 1, description: 'The unique identifier for a user' })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
   @ApiProperty({ example: 'John', description: 'The user name' })
-  @Column()
+  @Column({ type: 'varchar', length: '50' })
   name: string;
 
   @ApiProperty({ example: 'Doe', description: 'The user surname' })
-  @Column()
+  @Column({ type: 'varchar', length: '50' })
   surname: string;
 
   @ApiProperty({ example: 'birthdate', description: 'The user birthdate' })
@@ -20,18 +27,19 @@ export class UsersEntity {
   birthdate: Date;
 
   @ApiProperty({ example: '1234567890', description: 'The user passport' })
-  @Column({ unique: true })
+  @Column({ type: 'integer', unique: true })
   passport: number;
 
-  @ApiProperty({ example: 'USER', description: 'The user role' })
-  @Column()
-  role: string;
+  @ApiProperty({ type: RolesEntity, description: 'The user roles' })
+  @ManyToMany(() => RolesEntity)
+  @JoinTable()
+  roles: RolesEntity[];
 
   @ApiProperty({
     example: 'email@domain.com',
     description: 'The user email address',
   })
-  @Column()
+  @Column({ type: 'varchar', length: '62', unique: true })
   email: string;
 
   @ApiProperty({ example: 'password', description: 'The user password' })
