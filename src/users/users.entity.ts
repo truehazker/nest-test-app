@@ -27,7 +27,7 @@ export class UsersEntity {
   birthdate: Date;
 
   @ApiProperty({ example: '1234567890', description: 'The user passport' })
-  @Column({ type: 'integer', unique: true })
+  @Column({ type: 'integer' })
   passport: number;
 
   @ApiProperty({ type: RolesEntity, description: 'The user roles' })
@@ -43,6 +43,6 @@ export class UsersEntity {
   email: string;
 
   @ApiProperty({ example: 'password', description: 'The user password' })
-  @Column()
+  @Column({ type: 'varchar', length: '256' })
   password: string;
 }

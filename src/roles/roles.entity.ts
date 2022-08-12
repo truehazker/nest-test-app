@@ -9,7 +9,7 @@ export class RolesEntity {
   id: number;
 
   @ApiProperty({ example: 'USER', description: 'The title of a user' })
-  @Column({ type: 'varchar', length: '42' })
+  @Column({ type: 'varchar', length: '42', unique: true })
   title: string;
 
   @ManyToMany(() => UsersEntity)

@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersEntity } from './users.entity';
+import { UserDTO } from '../dtos/user.dto';
 
 @ApiTags('users')
 @Controller('users')
@@ -17,7 +18,7 @@ export class UsersController {
     type: [UsersEntity],
   })
   @Get()
-  async findAll(): Promise<UsersEntity[]> {
+  async findAll(): Promise<UserDTO[]> {
     return await this.userService.getAll();
   }
 
@@ -30,7 +31,7 @@ export class UsersController {
     type: UsersEntity,
   })
   @Post()
-  async create(@Body() usersEntity: UsersEntity): Promise<UsersEntity> {
+  async create(@Body() usersEntity: UserDTO): Promise<UserDTO> {
     return await this.userService.create(usersEntity);
   }
 }
