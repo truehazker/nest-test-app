@@ -38,4 +38,4 @@ lerna-debug.log*
 .env
 .env.development
 .env.production
-library.sql
+*.sql

@@ -25,10 +25,16 @@ export class UsersService {
   }
 
   async getByEmail(email: string): Promise<UsersEntity> {
-    return await this.userRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({
+      where: { email },
+      relations: ['roles'],
+    });
   }
 
   async getById(id: number): Promise<UsersEntity> {
-    return await this.userRepository.findOne({ where: { id } });
+    return await this.userRepository.findOne({
+      where: { id },
+      relations: ['roles'],
+    });
   }
 }

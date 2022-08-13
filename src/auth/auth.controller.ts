@@ -4,7 +4,7 @@ import { UserDTO } from '../dtos/user.dto';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from '../types/auth.types';
+import { JwtDecoded } from '../types/auth.types';
 
 @Controller('auth')
 export class AuthController {
@@ -31,9 +31,9 @@ export class AuthController {
   async refresh(@Request() body) {
     // @Request() is used to get Bearer token from the Headers of the request object.
     const jwtToken = body.headers.authorization.replace('Bearer ', '').trim(); // get the token from the headers and remove the Bearer prefix
-    const decodedJwtAccessToken: JwtPayload = this.jwtService.decode(
+    const decodedJwtAccessToken: JwtDecoded = this.jwtService.decode(
       jwtToken,
-    ) as JwtPayload; // decode the token
+    ) as JwtDecoded; // decode the token
     const userId = decodedJwtAccessToken.sub; // get the user id from the token
 
     return await this.authService.refresh(userId); // return the new token
