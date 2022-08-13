@@ -13,17 +13,18 @@ export class UsersService {
     private roleService: RolesService,
   ) {}
 
-  async getAll(): Promise<UserDTO[]> {
+  async getAll(): Promise<UsersEntity[]> {
     return await this.userRepository.find({ relations: ['roles'] });
   }
 
-  async create(users: UserDTO): Promise<UserDTO> {
-    const _ = await this.roleService.getByTitle('USER');
-    users.roles = [_];
-    return await this.userRepository.save(users);
+  async create(dto: UserDTO): Promise<UsersEntity> {
+    const user = this.userRepository.create(dto);
+    const role = await this.roleService.getByTitle('USER');
+    user.roles = [role];
+    return await this.userRepository.save(user);
   }
 
-  async getByEmail(email: string): Promise<UserDTO> {
+  async getByEmail(email: string): Promise<UsersEntity> {
     return await this.userRepository.findOne({ where: { email } });
   }
 }

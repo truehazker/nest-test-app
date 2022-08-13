@@ -1,3 +1,3 @@
-export class RoleDTO {
-  readonly title: string;
+export interface RoleDTO {
+  title: string;
 }

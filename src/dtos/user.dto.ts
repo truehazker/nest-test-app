@@ -10,12 +10,7 @@ export interface UserDTO {
   roles: RoleDTO[];
 }
 
-export interface UserSoftDTO {
-  name?: string;
-  surname?: string;
-  birthdate?: Date;
-  passport?: number;
+export interface UserPartialDTO {
   email?: string;
   password?: string;
-  roles?: RoleDTO[];
 }

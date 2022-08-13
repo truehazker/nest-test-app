@@ -11,15 +11,15 @@ export class RolesService {
     private userRepository: Repository<RolesEntity>,
   ) {}
 
-  async getAll(): Promise<RoleDTO[]> {
+  async getAll(): Promise<RolesEntity[]> {
     return await this.userRepository.find();
   }
 
-  async create(rolesEntity: RoleDTO): Promise<RoleDTO> {
-    return await this.userRepository.save(rolesEntity);
+  async create(dto: RoleDTO): Promise<RolesEntity> {
+    return await this.userRepository.save(dto);
   }
 
-  async getByTitle(title: string): Promise<RoleDTO> {
+  async getByTitle(title: string): Promise<RolesEntity> {
     return await this.userRepository.findOne({ where: { title } });
   }
 }
