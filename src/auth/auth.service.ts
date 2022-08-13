@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../users/users.entity';
+import { JwtResponse } from '../types/auth.types';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async login(dto: UserPartialDTO): Promise<{ access_token: string }> {
+  async login(dto: UserPartialDTO): Promise<JwtResponse> {
     const user = await this.usersService.getByEmail(dto.email);
     return await this.generateToken(user);
   }
@@ -42,12 +43,16 @@ export class AuthService {
     return user;
   }
 
-  private async generateToken(
-    user: UsersEntity,
-  ): Promise<{ access_token: string }> {
+  private async generateToken(user: UsersEntity): Promise<JwtResponse> {
     const payload = { email: user.email, sub: user.id };
-    return {
+    const response: JwtResponse = {
       access_token: this.jwtService.sign(payload),
     };
+    return response;
+  }
+
+  async refresh(userId: number): Promise<JwtResponse> {
+    const user = await this.usersService.getById(userId);
+    return await this.generateToken(user);
   }
 }
