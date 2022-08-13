@@ -1,10 +1,10 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserDTO } from '../dtos/user.dto';
-import { LocalAuthGuard } from './local-auth.guard';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import { UsersDto } from '../users/dtos/users.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { JwtDecoded } from '../types/auth.types';
+import { JwtDecoded } from './types/auth.type';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(@Body() dto: UserDTO) {
+  async register(@Body() dto: UsersDto) {
     return await this.authService.register(dto);
   }
 

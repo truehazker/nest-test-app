@@ -2,24 +2,36 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolesEntity } from './roles.entity';
-import { RoleDTO } from '../dtos/role.dto';
+import { RolesDto } from './dtos/roles.dto';
 
 @Injectable()
 export class RolesService {
   constructor(
     @InjectRepository(RolesEntity)
-    private userRepository: Repository<RolesEntity>,
+    private rolesRepository: Repository<RolesEntity>,
   ) {}
 
-  async getAll(): Promise<RolesEntity[]> {
-    return await this.userRepository.find();
+  async create(dto: RolesDto): Promise<RolesEntity> {
+    return await this.rolesRepository.save(dto);
   }
 
-  async create(dto: RoleDTO): Promise<RolesEntity> {
-    return await this.userRepository.save(dto);
+  async getAll(): Promise<RolesEntity[]> {
+    return await this.rolesRepository.find();
   }
 
   async getByTitle(title: string): Promise<RolesEntity> {
-    return await this.userRepository.findOne({ where: { title } });
+    return await this.rolesRepository.findOne({ where: { title } });
+  }
+
+  async update(id: number, dto: RolesDto): Promise<RolesEntity> {
+    await this.rolesRepository.update(id, dto);
+    const role = await this.rolesRepository.findOne({ where: { id } });
+    return role;
+  }
+
+  async delete(id: number): Promise<RolesEntity> {
+    const role = await this.rolesRepository.findOne({ where: { id } });
+    await this.rolesRepository.delete(id);
+    return role;
   }
 }

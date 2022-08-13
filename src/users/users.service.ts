@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from './users.entity';
 import { RolesService } from '../roles/roles.service';
-import { UserDTO } from '../dtos/user.dto';
+import { UsersDto } from './dtos/users.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,15 +13,15 @@ export class UsersService {
     private roleService: RolesService,
   ) {}
 
-  async getAll(): Promise<UsersEntity[]> {
-    return await this.userRepository.find({ relations: ['roles'] });
-  }
-
-  async create(dto: UserDTO): Promise<UsersEntity> {
+  async create(dto: UsersDto): Promise<UsersEntity> {
     const user = this.userRepository.create(dto);
     const role = await this.roleService.getByTitle('USER');
     user.roles = [role];
     return await this.userRepository.save(user);
+  }
+
+  async getAll(): Promise<UsersEntity[]> {
+    return await this.userRepository.find({ relations: ['roles'] });
   }
 
   async getByEmail(email: string): Promise<UsersEntity> {
@@ -36,5 +36,24 @@ export class UsersService {
       where: { id },
       relations: ['roles'],
     });
+  }
+
+  async assignRole(id: number, title: string) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    const role = await this.roleService.getByTitle(title);
+    user.roles = [role];
+    return await this.userRepository.save(user);
+  }
+
+  async update(id: number, dto: UsersDto): Promise<UsersEntity> {
+    await this.userRepository.update(id, dto);
+    const user = await this.userRepository.findOne({ where: { id } });
+    return user;
+  }
+
+  async delete(id: number): Promise<UsersEntity> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    await this.userRepository.delete(id);
+    return user;
   }
 }

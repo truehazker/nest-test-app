@@ -9,8 +9,8 @@ Simple [Nest](https://github.com/nestjs/nest) online library service.
 - [ ] Implement administrator functionality
   - [ ] Add new books
   - [ ] Issue books to users
-  - [ ] Add new roles
-  - [ ] Assign users to roles
+  - [x] Add new roles
+  - [x] Assign users to roles
 - [ ] Implement booking of books
 - [ ] Implement returning of books
 - [ ] Implement search functionality

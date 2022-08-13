@@ -1,10 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { UserDTO, UserPartialDTO } from '../dtos/user.dto';
+import { UsersDto, UserPartialDTO } from '../users/dtos/users.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../users/users.entity';
-import { JwtPayload, JwtResponse } from '../types/auth.types';
+import { JwtPayload, JwtResponse } from './types/auth.type';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +18,7 @@ export class AuthService {
     return await this.generateToken(user);
   }
 
-  async register(dto: UserDTO) {
+  async register(dto: UsersDto) {
     const twin = await this.usersService.getByEmail(dto.email);
     if (twin) {
       throw new HttpException('Email already in use', 409);
@@ -45,6 +45,7 @@ export class AuthService {
 
   private async generateToken(user: UsersEntity): Promise<JwtResponse> {
     const mappedRoles = user.roles.map((role) => role.title); // Convert from RolesEntity[] to string[]
+    console.log(mappedRoles);
     const payload: JwtPayload = {
       email: user.email,
       sub: user.id,
