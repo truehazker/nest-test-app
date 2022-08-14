@@ -11,6 +11,7 @@ import {
 import { RolesService } from './roles.service';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -28,6 +29,7 @@ export class RolesController {
   constructor(private roleService: RolesService) {}
 
   @ApiOperation({ summary: 'Create role' })
+  @ApiBody({ type: RolesDto })
   @ApiResponse({
     status: 200,
     description: 'Successfully created',

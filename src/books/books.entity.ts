@@ -14,6 +14,7 @@ export class BooksEntity {
   @ApiProperty({
     example: 1,
     description: 'The unique identifier for the book',
+    type: Number,
   })
   @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
@@ -21,13 +22,16 @@ export class BooksEntity {
   @ApiProperty({
     example: 'The lord of the rings',
     description: 'The title of the book',
+    type: String,
   })
   @Column({ type: 'varchar', length: '42', unique: true })
   title: string;
 
-  @ManyToOne(() => AuthorsEntity, (author) => author.books)
+  @ManyToOne(() => AuthorsEntity, (author) => author.books, {})
   author: AuthorsEntity;
 
-  @OneToMany(() => BorrowsEntity, (borrow) => borrow.book)
+  @OneToMany(() => BorrowsEntity, (borrow) => borrow.book, {
+    cascade: true,
+  })
   borrows: BorrowsEntity[];
 }

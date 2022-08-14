@@ -7,15 +7,24 @@ export class AuthorsEntity {
   @ApiProperty({
     example: 1,
     description: 'The unique identifier for the author',
+    type: Number,
   })
   @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
-  @ApiProperty({ example: 'Joe', description: 'The name of the author' })
+  @ApiProperty({
+    example: 'Joe',
+    description: 'The name of the author',
+    type: String,
+  })
   @Column({ type: 'varchar', length: '50' })
   name: string;
 
-  @ApiProperty({ example: 'Doe', description: 'The surname of the author' })
+  @ApiProperty({
+    example: 'Doe',
+    description: 'The surname of the author',
+    type: String,
+  })
   @Column({ type: 'varchar', length: '50' })
   surname: string;
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BooksEntity } from './books.entity';
@@ -14,6 +14,8 @@ export class BooksService {
   ) {}
 
   async create(dto: BooksDto): Promise<BooksEntity> {
+    // We don't need to check if the book already exists
+    // Because same title could be used by different authors
     const author = this.booksRepository.create(dto);
     return await this.booksRepository.save(author);
   }
@@ -45,20 +47,25 @@ export class BooksService {
   }
 
   async update(id: number, dto: BooksDto): Promise<BooksEntity> {
-    await this.booksRepository.update(id, dto);
-    const book = await this.booksRepository.findOne({
-      where: { id },
-      relations: ['author'],
-    });
-    return book;
+    const book = await this.getById(id);
+
+    if (!(await this.getById(id)))
+      throw new HttpException('Book not found', 404);
+
+    const modified = await this.booksRepository.merge(book, dto);
+    await this.booksRepository.save(modified);
+
+    return await this.booksRepository.findOne({ where: { id } });
   }
 
   async assignAuthor(id: number, surname: string) {
-    const book = await this.booksRepository.findOne({
-      where: { id },
-      relations: ['author'],
-    });
+    const book = await this.getById(id);
+
+    if (!book) throw new HttpException('Book not found', 404);
+
     const author = await this.authorsService.getBySurname(surname);
+
+    if (!author) throw new HttpException('Author not found', 404);
 
     book.author = author;
 
@@ -72,15 +79,17 @@ export class BooksService {
   }
 
   async removeAuthor(id: number) {
-    const book = await this.booksRepository.findOne({
-      where: { id },
-      relations: ['author'],
-    });
+    const book = await this.getById(id);
+
+    if (!book) throw new HttpException('Book not found', 404);
+
     book.author = null;
     return await this.booksRepository.save(book);
   }
 
   async delete(id: number): Promise<void> {
+    const book = await this.getById(id);
+    if (!book) throw new HttpException('Book not found', 404);
     await this.booksRepository.delete(id);
   }
 }

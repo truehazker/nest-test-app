@@ -7,7 +7,12 @@ import {
   Request,
   Put,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BorrowsEntity } from './borrows.entity';
 import { BorrowsService } from './borrows.service';
 import { Roles } from '../roles/roles.decorator';
@@ -29,7 +34,17 @@ export class BorrowsController {
     return await this.borrowService.getOverdue(userId);
   }
 
-  @Roles('USER')
+  @ApiOperation({ summary: 'Request a book' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful request',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Book not found',
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('request/:bookId')
   async request(
@@ -44,7 +59,17 @@ export class BorrowsController {
     return await this.borrowService.request(userId, bookId);
   }
 
-  @Roles('USER')
+  @ApiOperation({ summary: 'Get my borrows' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful request',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Borrows not found',
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.USER)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('my')
   async getByUser(@Request() req): Promise<BorrowsEntity[]> {
@@ -56,6 +81,16 @@ export class BorrowsController {
     return await this.borrowService.getByUser(userId, null);
   }
 
+  @ApiOperation({ summary: 'Get all pending requests' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful request',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Borrows not found',
+  })
+  @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('requests')
@@ -63,16 +98,36 @@ export class BorrowsController {
     return await this.borrowService.getRequests();
   }
 
+  @ApiOperation({ summary: 'Confirm borrow' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful request',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Borrow not found',
+  })
+  @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Put('confirm/:id')
+  @Put(':id/confirm')
   async confirm(@Param('id') id: number): Promise<BorrowsEntity> {
     return await this.borrowService.confirmBorrow(id);
   }
 
+  @ApiOperation({ summary: 'Return book from borrow' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful request',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Borrows not found',
+  })
+  @ApiBearerAuth()
   @Roles('USER')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Put('return/:id')
+  @Put(':id/return/')
   async return(@Param('id') id: number): Promise<BorrowsEntity> {
     return await this.borrowService.returnBorrow(id);
   }

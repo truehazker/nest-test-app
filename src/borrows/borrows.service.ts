@@ -45,6 +45,10 @@ export class BorrowsService {
     };
 
     const books = await this.getByBook(bookId);
+    if (!books) {
+      throw new HttpException('Book not found', 404);
+    }
+
     if (books.length > 0 && books[0].status !== BorrowsStatusEnum.RETURNED) {
       throw new HttpException('Book is not available', 400);
     }
@@ -77,16 +81,18 @@ export class BorrowsService {
 
   async getByUser(
     id: number,
-    status: BorrowsStatusEnum,
+    status: BorrowsStatusEnum | null,
   ): Promise<BorrowsEntity[]> {
     const result = await this.borrowsRepository
       .createQueryBuilder('borrow')
       .innerJoinAndSelect('borrow.book', 'book')
       .innerJoinAndSelect('borrow.user', 'user')
-      .where(`borrow.userId = :id ${status ?? 'AND borrow.status = :status'}`, {
-        id,
-        status,
-      })
+      .where(
+        `borrow.userId = :id ${status ? 'AND borrow.status = ' + status : ''}`, // TODO: Refactor this
+        {
+          id,
+        },
+      )
       .orderBy('borrow.createdAt', 'DESC')
       .getMany();
 
