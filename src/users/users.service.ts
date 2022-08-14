@@ -39,9 +39,24 @@ export class UsersService {
   }
 
   async assignRole(id: number, title: string) {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['roles'],
+    });
     const role = await this.roleService.getByTitle(title);
-    user.roles = [role];
+
+    if (role && user.roles.findIndex((e) => e.title === title) === -1)
+      user.roles.push(role);
+
+    return await this.userRepository.save(user);
+  }
+
+  async removeRole(id: number, title: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['roles'],
+    });
+    user.roles = user.roles.filter((e) => e.title !== title);
     return await this.userRepository.save(user);
   }
 
@@ -51,9 +66,7 @@ export class UsersService {
     return user;
   }
 
-  async delete(id: number): Promise<UsersEntity> {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async delete(id: number): Promise<void> {
     await this.userRepository.delete(id);
-    return user;
   }
 }

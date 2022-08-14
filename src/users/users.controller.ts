@@ -103,17 +103,34 @@ export class UsersController {
   }
 
   @ApiOperation({
-    summary: 'Delete a user',
+    summary: 'Remove the role from the user',
   })
   @ApiResponse({
     status: 200,
-    description: 'The deleted user',
+    description: 'The updated user',
     type: UsersEntity,
   })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete(':id/:role')
+  async removeRole(
+    @Param('id') id: number,
+    @Param('role') role: string,
+  ): Promise<UsersDto> {
+    return await this.userService.removeRole(id, role);
+  }
+
+  @ApiOperation({
+    summary: 'Delete a user',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+  })
+  @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<UsersDto> {
+  async delete(@Param('id') id: number): Promise<void> {
     return await this.userService.delete(id);
   }
 }

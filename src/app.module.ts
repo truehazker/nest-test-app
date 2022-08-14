@@ -22,8 +22,8 @@ import { BorrowsModule } from './borrows/borrows.module';
     UsersModule,
     RolesModule,
     AuthModule,
-    BooksModule,
     AuthorsModule,
+    BooksModule,
     BorrowsModule,
   ],
 })

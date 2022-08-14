@@ -3,10 +3,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { RolesEntity } from '../roles/roles.entity';
+import { BorrowsEntity } from '../borrows/borrows.entity';
 
 @Entity('users')
 export class UsersEntity {
@@ -54,4 +56,7 @@ export class UsersEntity {
   @ApiProperty({ example: 'password', description: 'The password of the user' })
   @Column({ type: 'varchar', length: '256' })
   password: string;
+
+  @OneToMany(() => BorrowsEntity, (borrow) => borrow.user)
+  borrows: BorrowsEntity[];
 }

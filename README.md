@@ -7,15 +7,15 @@ Simple [Nest](https://github.com/nestjs/nest) online library service.
 - [x] Implement registration of new users
 - [x] Implement login of existing users
 - [ ] Implement administrator functionality
-  - [ ] Add new books
+  - [x] Add new books
   - [ ] Issue books to users
   - [x] Add new roles
   - [x] Assign users to roles
-- [ ] Implement booking of books
+- [x] Implement booking of books
 - [ ] Implement returning of books
-- [ ] Implement search functionality
-  - [ ] Search by title
-  - [ ] Search by author
+- [x] Implement search functionality
+  - [x] Search by title
+  - [x] Search by author
 
 ## Tables
 
@@ -31,6 +31,14 @@ Simple [Nest](https://github.com/nestjs/nest) online library service.
   - title
   - author
   - description
+- Borrows
+  - Status
+  - CreatedAt
+  - IssuedAt
+  - ExpectedAt
+  - ReturnedAt
+  - Related User
+  - Related Book
 - Tickets
   - user_id
   - book_id

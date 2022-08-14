@@ -10,6 +10,16 @@ export interface UsersDto {
   roles: RolesDto[];
 }
 
+export interface UsersSafeDto {
+  name: string;
+  surname: string;
+  birthdate: Date;
+  passport: number;
+  email: string;
+  password: string;
+  roles: RolesDto[];
+}
+
 export interface UserPartialDTO {
   email?: string;
   password?: string;

@@ -4,7 +4,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../users/users.entity';
-import { JwtPayload, JwtResponse } from './types/auth.type';
+import { JwtDecoded, JwtPayload, JwtResponse } from './types/auth.type';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +45,6 @@ export class AuthService {
 
   private async generateToken(user: UsersEntity): Promise<JwtResponse> {
     const mappedRoles = user.roles.map((role) => role.title); // Convert from RolesEntity[] to string[]
-    console.log(mappedRoles);
     const payload: JwtPayload = {
       email: user.email,
       sub: user.id,
@@ -60,5 +59,14 @@ export class AuthService {
   async refresh(userId: number): Promise<JwtResponse> {
     const user = await this.usersService.getById(userId);
     return await this.generateToken(user);
+  }
+
+  async decodeJwt(jwtRaw: string): Promise<JwtDecoded> {
+    const jwtToken = jwtRaw.replace('Bearer ', '').trim();
+    const decodedJwtAccessToken: JwtDecoded = this.jwtService.decode(
+      jwtToken,
+    ) as JwtDecoded;
+
+    return decodedJwtAccessToken;
   }
 }

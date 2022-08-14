@@ -1,5 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthorsEntity } from '../authors/authors.entity';
+import { BorrowsEntity } from '../borrows/borrows.entity';
 
 @Entity('books')
 export class BooksEntity {
@@ -16,4 +24,10 @@ export class BooksEntity {
   })
   @Column({ type: 'varchar', length: '42', unique: true })
   title: string;
+
+  @ManyToOne(() => AuthorsEntity, (author) => author.books)
+  author: AuthorsEntity;
+
+  @OneToMany(() => BorrowsEntity, (borrow) => borrow.book)
+  borrows: BorrowsEntity[];
 }
