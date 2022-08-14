@@ -1,11 +1,20 @@
 import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UsersDto } from '../users/dtos/users.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { JwtResponse } from './dtos/auth.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UsersRegisterDto } from '../users/dtos/users-register.dto';
+import { UsersLoginDto } from '../users/dtos/users-login.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -13,6 +22,17 @@ export class AuthController {
     private authService: AuthService,
   ) {}
 
+  @ApiOperation({ summary: 'Login' })
+  @ApiBody({ type: UsersLoginDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Successful login',
+    type: JwtResponse,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials',
+  })
   @UseGuards(LocalAuthGuard) // LocalAuthGuard appends the user to the request object.
   @Post('login')
   async login(@Request() req): Promise<JwtResponse> {
@@ -21,11 +41,28 @@ export class AuthController {
     return await this.authService.login(req.user);
   }
 
+  @ApiOperation({ summary: 'Register' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successful registration',
+    type: JwtResponse,
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'User with this email already exists',
+  })
   @Post('register')
-  async register(@Body() dto: UsersDto): Promise<JwtResponse> {
+  async register(@Body() dto: UsersRegisterDto): Promise<JwtResponse> {
     return await this.authService.register(dto);
   }
 
+  @ApiOperation({ summary: 'Refresh token' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully refreshed token',
+    type: JwtResponse,
+  })
   @UseGuards(JwtAuthGuard) // The JwtAuthGuard is used to verify the token.
   @Post('refresh')
   async refresh(@Request() req): Promise<JwtResponse> {
