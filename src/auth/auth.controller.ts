@@ -57,12 +57,12 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Refresh token' })
-  @ApiBearerAuth()
   @ApiResponse({
     status: 200,
     description: 'Successfully refreshed token',
     type: JwtResponse,
   })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard) // The JwtAuthGuard is used to verify the token.
   @Post('refresh')
   async refresh(@Request() req): Promise<JwtResponse> {

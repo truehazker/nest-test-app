@@ -44,7 +44,7 @@ export class UsersService {
     });
   }
 
-  async assignRole(id: number, title: RolesEnum) {
+  async assignRole(id: number, title: RolesEnum): Promise<UsersEntity> {
     const user = await this.getById(id);
 
     if (!user) throw new HttpException('User not found', 404);
@@ -57,7 +57,7 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
-  async removeRole(id: number, title: string) {
+  async removeRole(id: number, title: string): Promise<UsersEntity> {
     const user = await this.getById(id);
 
     if (!user) throw new HttpException('User not found', 404);
@@ -79,6 +79,8 @@ export class UsersService {
   }
 
   async delete(id: number): Promise<void> {
+    const user = await this.getById(id);
+    if (!user) throw new HttpException('User not found', 404);
     await this.userRepository.delete(id);
   }
 }

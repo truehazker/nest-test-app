@@ -41,7 +41,7 @@ export class UsersEntity {
   @Column({ type: 'integer' })
   passport: number;
 
-  @ApiProperty({ type: RolesEntity, description: 'The roles of the user' })
+  @ApiProperty({ description: 'The roles of the user', type: RolesEntity })
   @ManyToMany(() => RolesEntity)
   @JoinTable()
   roles: RolesEntity[];
