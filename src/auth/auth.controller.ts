@@ -4,6 +4,7 @@ import { UsersDto } from '../users/dtos/users.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { JwtResponse } from './types/auth.type';
 
 @Controller('auth')
 export class AuthController {
@@ -14,20 +15,20 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard) // LocalAuthGuard appends the user to the request object.
   @Post('login')
-  async login(@Request() req) {
+  async login(@Request() req): Promise<JwtResponse> {
     // The usage of @Request() is to get the user from the request object
     // and pass it to the authService.login() method.
     return await this.authService.login(req.user);
   }
 
   @Post('register')
-  async register(@Body() dto: UsersDto) {
+  async register(@Body() dto: UsersDto): Promise<JwtResponse> {
     return await this.authService.register(dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('refresh')
-  async refresh(@Request() req) {
+  async refresh(@Request() req): Promise<JwtResponse> {
     // @Request() is used to get Bearer token from the Headers of the request object.
     const decodedJwtAccessToken = await this.authService.decodeJwt(
       req.headers.authorization,

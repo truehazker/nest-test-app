@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { BooksService } from './books.service';
 import { Roles } from '../roles/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,14 +21,6 @@ import { BooksDto } from './dtos/books.dto';
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @ApiOperation({
-    summary: 'Create the book',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'The created book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
@@ -36,14 +28,6 @@ export class BooksController {
     return await this.booksService.create(dto);
   }
 
-  @ApiOperation({
-    summary: 'Get all books',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The books',
-    type: [BooksEntity],
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
@@ -51,14 +35,6 @@ export class BooksController {
     return await this.booksService.getAll();
   }
 
-  @ApiOperation({
-    summary: 'Get an book by id',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
@@ -66,14 +42,6 @@ export class BooksController {
     return await this.booksService.getById(id);
   }
 
-  @ApiOperation({
-    summary: 'Get an book by title',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/title/:title')
@@ -81,14 +49,6 @@ export class BooksController {
     return await this.booksService.getByTitle(title);
   }
 
-  @ApiOperation({
-    summary: 'Get an book by author',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/author/:author')
@@ -96,14 +56,6 @@ export class BooksController {
     return await this.booksService.getByAuthor(author);
   }
 
-  @ApiOperation({
-    summary: 'Update the book',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The updated book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
@@ -114,14 +66,6 @@ export class BooksController {
     return await this.booksService.update(id, dto);
   }
 
-  @ApiOperation({
-    summary: 'Assign the author to the book',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The updated book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id/author/:surname')
@@ -132,14 +76,6 @@ export class BooksController {
     return await this.booksService.assignAuthor(id, surname);
   }
 
-  @ApiOperation({
-    summary: 'Remove the author from the book',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The updated book',
-    type: BooksEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id/author/remove')
@@ -147,13 +83,6 @@ export class BooksController {
     return await this.booksService.removeAuthor(id);
   }
 
-  @ApiOperation({
-    summary: 'Delete the book',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The deleted book',
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')

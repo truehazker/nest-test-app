@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthorsService } from './authors.service';
 import { AuthorsEntity } from './authors.entity';
 import { AuthorsDto } from './dtos/authors.dto';
@@ -21,14 +21,6 @@ import { RolesGuard } from '../roles/guards/roles.guard';
 export class AuthorsController {
   constructor(private authorsService: AuthorsService) {}
 
-  @ApiOperation({
-    summary: 'Create the author',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'The created author',
-    type: AuthorsEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
@@ -36,14 +28,6 @@ export class AuthorsController {
     return await this.authorsService.create(dto);
   }
 
-  @ApiOperation({
-    summary: 'Get all authors',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The authors',
-    type: [AuthorsEntity],
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
@@ -51,14 +35,6 @@ export class AuthorsController {
     return await this.authorsService.getAll();
   }
 
-  @ApiOperation({
-    summary: 'Get an author by id',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found author',
-    type: AuthorsEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
@@ -66,14 +42,6 @@ export class AuthorsController {
     return await this.authorsService.getById(id);
   }
 
-  @ApiOperation({
-    summary: 'Get an author by surname',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found author',
-    type: AuthorsEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/surname/:surname')
@@ -83,14 +51,6 @@ export class AuthorsController {
     return await this.authorsService.getBySurname(surname);
   }
 
-  @ApiOperation({
-    summary: 'Update an author',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The updated author',
-    type: AuthorsEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
@@ -101,13 +61,6 @@ export class AuthorsController {
     return await this.authorsService.update(id, dto);
   }
 
-  @ApiOperation({
-    summary: 'Delete an author',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The deleted author',
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')

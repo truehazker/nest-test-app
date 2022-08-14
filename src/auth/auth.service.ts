@@ -62,6 +62,7 @@ export class AuthService {
   }
 
   async decodeJwt(jwtRaw: string): Promise<JwtDecoded> {
+    // TODO: Refactor this method using decorators
     const jwtToken = jwtRaw.replace('Bearer ', '').trim();
     const decodedJwtAccessToken: JwtDecoded = this.jwtService.decode(
       jwtToken,

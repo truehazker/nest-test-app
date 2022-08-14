@@ -7,7 +7,7 @@ import {
   Request,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { BorrowsEntity } from './borrows.entity';
 import { BorrowsService } from './borrows.service';
 import { Roles } from '../roles/roles.decorator';
@@ -28,14 +28,6 @@ export class BorrowsController {
     return await this.borrowService.getOverdue(userId);
   }
 
-  @ApiOperation({
-    summary: 'Request a borrow',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The created borrow',
-    type: BorrowsEntity,
-  })
   @Roles('USER')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('request/:bookId')
@@ -51,17 +43,9 @@ export class BorrowsController {
     return await this.borrowService.request(userId, bookId);
   }
 
-  @ApiOperation({
-    summary: 'Get all borrows for a user',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The updated borrow',
-    type: [BorrowsEntity],
-  })
   @Roles('USER')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('user')
+  @Get('my')
   async getByUser(@Request() req): Promise<BorrowsEntity[]> {
     const decodedJwtAccessToken = await this.authService.decodeJwt(
       req.headers.authorization,
@@ -71,14 +55,6 @@ export class BorrowsController {
     return await this.borrowService.getByUser(userId, null);
   }
 
-  @ApiOperation({
-    summary: 'Get all requested borrows',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The found borrows',
-    type: [BorrowsEntity],
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('requests')
@@ -86,18 +62,17 @@ export class BorrowsController {
     return await this.borrowService.getRequests();
   }
 
-  @ApiOperation({
-    summary: 'Confirm a borrow',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'The confirmed borrow',
-    type: BorrowsEntity,
-  })
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('confirm/:id')
   async confirm(@Param('id') id: number): Promise<BorrowsEntity> {
     return await this.borrowService.confirmBorrow(id);
+  }
+
+  @Roles('USER')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put('return/:id')
+  async return(@Param('id') id: number): Promise<BorrowsEntity> {
+    return await this.borrowService.returnBorrow(id);
   }
 }
