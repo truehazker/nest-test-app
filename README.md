@@ -5,23 +5,23 @@ Simple [Nest](https://github.com/nestjs/nest) online library service.
 ## To Do
 
 - [x] Authentication & Authorization
-- [ ] View Catalog with available books
+- [x] View Catalog with available books
 - [x] Book reservation
 - [x] Book return
-- [ ] Book search
-- [ ] Book management for admin
+- [x] Book search
+- [x] Book management for admin
 
 ## Milestones
 
 - [x] Implement registration of new users
 - [x] Implement login of existing users
-- [ ] Implement administrator functionality
+- [x] Implement administrator functionality
   - [x] Add new books
-  - [ ] Issue books to users
+  - [x] Issue books to users
   - [x] Add new roles
   - [x] Assign users to roles
 - [x] Implement booking of books
-- [ ] Implement returning of books
+- [x] Implement returning of books
 - [x] Implement search functionality
   - [x] Search by title
   - [x] Search by author

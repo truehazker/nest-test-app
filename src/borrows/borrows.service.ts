@@ -49,7 +49,7 @@ export class BorrowsService {
       throw new HttpException('Book not found', 404);
     }
 
-    if (books.length > 0 && books[0].status !== BorrowsStatusEnum.RETURNED) {
+    if (books.length > 0 && books[0].status === BorrowsStatusEnum.BORROWED) {
       throw new HttpException('Book is not available', 400);
     }
 

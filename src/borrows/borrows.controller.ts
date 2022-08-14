@@ -115,6 +115,23 @@ export class BorrowsController {
     return await this.borrowService.confirmBorrow(id);
   }
 
+  @ApiOperation({ summary: 'Reject borrow' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully rejected',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Borrow not found',
+  })
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Put(':id/reject')
+  async reject(@Param('id') id: number): Promise<BorrowsEntity> {
+    return await this.borrowService.rejectBorrow(id);
+  }
+
   @ApiOperation({ summary: 'Return book from borrow' })
   @ApiResponse({
     status: 200,
