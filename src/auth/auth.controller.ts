@@ -4,7 +4,7 @@ import { UsersDto } from '../users/dtos/users.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { JwtResponse } from './types/auth.type';
+import { JwtResponse } from './dtos/auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,7 +26,7 @@ export class AuthController {
     return await this.authService.register(dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard) // The JwtAuthGuard is used to verify the token.
   @Post('refresh')
   async refresh(@Request() req): Promise<JwtResponse> {
     // @Request() is used to get Bearer token from the Headers of the request object.

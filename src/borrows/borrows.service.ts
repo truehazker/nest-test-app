@@ -5,6 +5,7 @@ import { Brackets, Repository } from 'typeorm';
 import { BorrowsSoftDto } from './dtos/borrows.dto';
 import { BooksService } from '../books/books.service';
 import { UsersService } from '../users/users.service';
+import { BorrowsStatusEnum } from './constants/borrows-status.const';
 
 @Injectable()
 export class BorrowsService {
@@ -40,11 +41,11 @@ export class BorrowsService {
   // Create a new borrow with a status of requested
   async request(userId: number, bookId: number): Promise<BorrowsEntity> {
     const dto: BorrowsSoftDto = {
-      status: 'requested',
+      status: BorrowsStatusEnum.REQUESTED,
     };
 
     const books = await this.getByBook(bookId);
-    if (books.length > 0 && books[0].status !== 'returned') {
+    if (books.length > 0 && books[0].status !== BorrowsStatusEnum.RETURNED) {
       throw new HttpException('Book is not available', 400);
     }
 
@@ -76,7 +77,7 @@ export class BorrowsService {
 
   async getByUser(
     id: number,
-    status: 'borrowed' | 'returned' | 'requested' | 'rejected' | null,
+    status: BorrowsStatusEnum,
   ): Promise<BorrowsEntity[]> {
     const result = await this.borrowsRepository
       .createQueryBuilder('borrow')
@@ -94,7 +95,7 @@ export class BorrowsService {
 
   async getRequests(): Promise<BorrowsEntity[]> {
     return await this.borrowsRepository.find({
-      where: { status: 'requested' },
+      where: { status: BorrowsStatusEnum.REQUESTED },
       relations: ['book', 'user'],
       order: { createdAt: 'DESC' }, // Get the latest requests first
     });
@@ -119,10 +120,10 @@ export class BorrowsService {
 
   async confirmBorrow(id: number): Promise<BorrowsEntity> {
     const borrow = await this.getById(id);
-    if (borrow.status !== 'requested') {
+    if (borrow.status !== BorrowsStatusEnum.REQUESTED) {
       throw new HttpException('Borrow is not in requested status', 400);
     }
-    borrow.status = 'borrowed';
+    borrow.status = BorrowsStatusEnum.BORROWED;
     borrow.issuedAt = new Date();
     borrow.expectedAt = new Date();
     borrow.expectedAt.setDate(borrow.issuedAt.getDate() + 10);
@@ -136,10 +137,10 @@ export class BorrowsService {
 
   async rejectBorrow(id: number): Promise<BorrowsEntity> {
     const borrow = await this.getById(id);
-    if (borrow.status !== 'requested') {
+    if (borrow.status !== BorrowsStatusEnum.REQUESTED) {
       throw new HttpException('Borrow is not in requested status', 400);
     }
-    borrow.status = 'rejected';
+    borrow.status = BorrowsStatusEnum.REJECTED;
     const result = await this.borrowsRepository.save(borrow);
 
     return await this.borrowsRepository.findOne({
@@ -150,10 +151,11 @@ export class BorrowsService {
 
   async returnBorrow(id: number): Promise<BorrowsEntity> {
     const borrow = await this.getById(id);
-    if (borrow.status !== 'borrowed') {
+    if (borrow.status !== BorrowsStatusEnum.BORROWED) {
       throw new HttpException('Borrow is not in borrowed status', 400);
     }
-    borrow.status = 'returned';
+
+    borrow.status = BorrowsStatusEnum.RETURNED;
     borrow.returnedAt = new Date();
     const result = await this.borrowsRepository.save(borrow);
 

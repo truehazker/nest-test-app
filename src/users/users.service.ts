@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from './users.entity';
 import { RolesService } from '../roles/roles.service';
-import { UsersDto } from './dtos/users.dto';
+import { UsersUpdateDto } from './dtos/users-update.dto';
+import { UsersRegisterDto } from './dtos/users-register.dto';
+import { RolesEnum } from '../roles/constants/roles.const';
 
 @Injectable()
 export class UsersService {
@@ -13,9 +15,13 @@ export class UsersService {
     private roleService: RolesService,
   ) {}
 
-  async create(dto: UsersDto): Promise<UsersEntity> {
+  async create(dto: UsersRegisterDto): Promise<UsersEntity> {
+    const twin = await this.getByEmail(dto.email);
+    if (twin)
+      throw new HttpException('User with this email already exists', 409);
+
     const user = this.userRepository.create(dto);
-    const role = await this.roleService.getByTitle('USER');
+    const role = await this.roleService.getByTitle(RolesEnum.USER);
     user.roles = [role];
     return await this.userRepository.save(user);
   }
@@ -38,11 +44,11 @@ export class UsersService {
     });
   }
 
-  async assignRole(id: number, title: string) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: ['roles'],
-    });
+  async assignRole(id: number, title: RolesEnum) {
+    const user = await this.getById(id);
+
+    if (!user) throw new HttpException('User not found', 404);
+
     const role = await this.roleService.getByTitle(title);
 
     if (role && user.roles.findIndex((e) => e.title === title) === -1)
@@ -52,18 +58,24 @@ export class UsersService {
   }
 
   async removeRole(id: number, title: string) {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: ['roles'],
-    });
+    const user = await this.getById(id);
+
+    if (!user) throw new HttpException('User not found', 404);
+
     user.roles = user.roles.filter((e) => e.title !== title);
     return await this.userRepository.save(user);
   }
 
-  async update(id: number, dto: UsersDto): Promise<UsersEntity> {
-    await this.userRepository.update(id, dto);
-    const user = await this.userRepository.findOne({ where: { id } });
-    return user;
+  async update(id: number, dto: UsersUpdateDto): Promise<UsersEntity> {
+    const user = await this.getById(id);
+
+    if (!(await this.getById(id)))
+      throw new HttpException('User not found', 404);
+
+    const modified = await this.userRepository.merge(user, dto);
+    await this.userRepository.save(modified);
+
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async delete(id: number): Promise<void> {

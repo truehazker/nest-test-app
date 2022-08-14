@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolesEntity } from './roles.entity';
 import { RolesDto } from './dtos/roles.dto';
+import { RolesEnum } from './constants/roles.const';
 
 @Injectable()
 export class RolesService {
@@ -19,7 +20,7 @@ export class RolesService {
     return await this.rolesRepository.find();
   }
 
-  async getByTitle(title: string): Promise<RolesEntity> {
+  async getByTitle(title: RolesEnum): Promise<RolesEntity> {
     return await this.rolesRepository.findOne({ where: { title } });
   }
 

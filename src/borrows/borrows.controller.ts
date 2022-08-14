@@ -14,6 +14,7 @@ import { Roles } from '../roles/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../roles/guards/roles.guard';
 import { AuthService } from '../auth/auth.service';
+import { RolesEnum } from '../roles/constants/roles.const';
 
 @ApiTags('borrows')
 @Controller('borrows')
@@ -55,14 +56,14 @@ export class BorrowsController {
     return await this.borrowService.getByUser(userId, null);
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('requests')
   async getRequests(): Promise<BorrowsEntity[]> {
     return await this.borrowService.getRequests();
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('confirm/:id')
   async confirm(@Param('id') id: number): Promise<BorrowsEntity> {

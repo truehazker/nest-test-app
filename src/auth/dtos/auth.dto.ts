@@ -1,17 +1,17 @@
-export type JwtPayload = {
+export class JwtPayload {
   email: string;
   sub: number;
   roles: string[];
-};
+}
 
-export type JwtDecoded = {
+export class JwtDecoded {
   email: string;
   sub: number;
   roles: string[];
   iat: number;
   exp: number;
-};
+}
 
-export type JwtResponse = {
+export class JwtResponse {
   access_token: string;
-};
+}

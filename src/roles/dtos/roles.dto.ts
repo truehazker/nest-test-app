@@ -1,3 +1,3 @@
-export interface RolesDto {
+export class RolesDto {
   title: string;
 }

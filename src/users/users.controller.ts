@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
@@ -14,34 +13,28 @@ import { UsersDto } from './dtos/users.dto';
 import { Roles } from '../roles/roles.decorator';
 import { RolesGuard } from '../roles/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesEnum } from '../roles/constants/roles.const';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
-  @Roles('ADMIN')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Post()
-  async create(@Body() usersEntity: UsersDto): Promise<UsersDto> {
-    return await this.userService.create(usersEntity);
-  }
-
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async findAll(): Promise<UsersDto[]> {
     return await this.userService.getAll();
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<UsersDto> {
     return await this.userService.getById(id);
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   async update(
@@ -51,19 +44,19 @@ export class UsersController {
     return await this.userService.update(id, usersEntity);
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Put(':id/:role')
+  @Put(':id/role/:role')
   async assignRole(
     @Param('id') id: number,
-    @Param('role') role: string,
+    @Param('role') role: RolesEnum,
   ): Promise<UsersDto> {
     return await this.userService.assignRole(id, role);
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete(':id/:role')
+  @Delete(':id/role/:role')
   async removeRole(
     @Param('id') id: number,
     @Param('role') role: string,
@@ -71,7 +64,7 @@ export class UsersController {
     return await this.userService.removeRole(id, role);
   }
 
-  @Roles('ADMIN')
+  @Roles(RolesEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async delete(@Param('id') id: number): Promise<void> {

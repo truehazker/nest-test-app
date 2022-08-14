@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { UsersEntity } from '../users/users.entity';
 import { BooksEntity } from '../books/books.entity';
+import { BorrowsStatusEnum } from './constants/borrows-status.const';
 
 @Entity('borrows')
 export class BorrowsEntity {
@@ -18,9 +19,9 @@ export class BorrowsEntity {
   })
   @Column({
     type: 'varchar',
-    enum: ['borrowed', 'returned', 'requested', 'rejected'],
+    enum: BorrowsStatusEnum,
   })
-  status: 'borrowed' | 'returned' | 'requested' | 'rejected';
+  status: BorrowsStatusEnum;
 
   @Column({
     type: 'datetime',
