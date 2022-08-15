@@ -58,6 +58,12 @@ Running this command will create a Docker container with the app.
 $ docker-compose up -d
 ```
 
+## Api documentation
+
+You can use `Swagger UI` to view the generated API documentation.
+
+Just go to `https://localhost:PORT/api/docs` in your browser.
+
 ## Tutorials and guides used in this project
 - [Advanced NodeJs Backend Development](https://www.youtube.com/watch?v=dDeWWQWMM-Y)
 - [Creation of the blog with NestJS](https://www.youtube.com/watch?v=a5g23Fsy6rg&t=189s)
