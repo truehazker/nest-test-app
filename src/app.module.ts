@@ -11,7 +11,9 @@ import { BorrowsModule } from './borrows/borrows.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
+      envFilePath: `.env${
+        process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
+      }`,
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',

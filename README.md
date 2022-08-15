@@ -11,58 +11,27 @@ Simple [Nest](https://github.com/nestjs/nest) online library service.
 - [x] Book search
 - [x] Book management for admin
 
-## Milestones
-
-- [x] Implement registration of new users
-- [x] Implement login of existing users
-- [x] Implement administrator functionality
-  - [x] Add new books
-  - [x] Issue books to users
-  - [x] Add new roles
-  - [x] Assign users to roles
-- [x] Implement booking of books
-- [x] Implement returning of books
-- [x] Implement search functionality
-  - [x] Search by title
-  - [x] Search by author
-
-## Tables
-
-- Users
-  - name
-  - surname
-  - birthdate
-  - passport
-  - role
-  - email
-  - password
-- Books
-  - title
-  - author
-  - description
-- Borrows
-  - Status
-  - CreatedAt
-  - IssuedAt
-  - ExpectedAt
-  - ReturnedAt
-  - Related User
-  - Related Book
-- Tickets
-  - user_id
-  - book_id
-  - issued_at
-  - expected_at
-  - returned_at
-- Roles
-  - title
-  - description
-
 ## Installation
 
 ```bash
 $ npm install
 ```
+
+## Preparation
+
+Before running the app in `production` mode, you need to create `.env` file in the root directory with the following variables:
+
+Before running the app in `development` mode, you need to create `.env.development` file in the root directory with the following variables:
+
+> _You can use a .env.example file as a template._
+
+| Variable       | Description                    |
+|----------------|--------------------------------|
+| PORT           | Application port               |
+| DATABASE_NAME  | Database file name             |
+| JWT_SECRET     | JWT secret                     |
+| JWT_EXPIRES_ID | The time of JWT token lifetime |
+
 
 ## Running the app
 
@@ -75,6 +44,18 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+## Docker
+
+You can use Docker to run the app.
+
+Running this command will create a Docker container with the app.
+
+> **Note:** _Docker uses environment variables to configure the app from `.env` file_
+
+```bash
+$ docker-compose up -d
 ```
 
 ## Tutorials and guides used in this project
